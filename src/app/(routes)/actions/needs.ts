@@ -1,32 +1,17 @@
 "use server";
 
-import { z } from "zod";
 import { db } from "@/db";
 import { needs, participations } from "@/db/schema";
 import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
 import { revalidatePath } from "next/cache";
 import { and, eq } from "drizzle-orm";
-import { CATEGORIES, CITIES } from "@/lib/needs/constants";
-
-const phoneDigitsOnly = (s: string) => s.replace(/[^\d]/g, "");
-
-export const createNeedSchema = z.object({
-  title: z.string().trim().min(3).max(80),
-  description: z.string().trim().min(10).max(2000),
-  city: z.enum(CITIES),
-  category: z.enum(CATEGORIES),
-  whatsapp: z
-    .string()
-    .trim()
-    .min(8)
-    .max(25)
-    .transform(phoneDigitsOnly)
-    .refine((v) => v.length >= 8, "Numéro WhatsApp invalide"),
-});
+import { createNeedSchema } from "@/lib/schemas/needs";
+import { getServerSession } from "@/lib/auth/get-session";
+import { z } from "zod";
 
 export async function createNeed(input: z.infer<typeof createNeedSchema>) {
-  const session = await auth.api.getSession({ headers: await headers() });
+  const session = await getServerSession();
   if (!session?.user) throw new Error("UNAUTHORIZED");
 
   const data = createNeedSchema.parse(input);

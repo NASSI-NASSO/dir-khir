@@ -3,7 +3,7 @@ import { headers } from "next/headers";
 import { auth } from "@/lib/auth";
 import { db } from "@/db";
 import { needs, participations } from "@/db/schema";
-import { eq } from "drizzle-orm";
+import { eq,  sql } from "drizzle-orm";
 
 import Header from "./components/header";
 import MesDemandes from "./components/mes-demandes";
@@ -42,7 +42,7 @@ export default async function MonEspacePage() {
             </div>
 
             <div className="text-center text-sm text-muted-foreground pt-8 border-t">
-                <p>Ensemble pour le Maroc 🇲🇦</p>
+                <p>Ensemble pour le Maroc 🇲🇦 </p>
             </div>
         </main>
     );

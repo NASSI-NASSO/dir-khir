@@ -1,7 +1,8 @@
 import { redirect } from "next/navigation";
 import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
-import { createNeed, createNeedSchema } from "../actions/needs";
+import { createNeed } from "../actions/needs";
+import { createNeedSchema } from "@/lib/schemas/needs";
 import { CATEGORIES, CITIES } from "@/lib/needs/constants";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
@@ -22,7 +23,7 @@ export default async function ProposerUnBesoinPage() {
       whatsapp: String(formData.get("whatsapp") ?? ""),
     };
 
-    const parsed = createNeedSchema.parse(raw);
+    const parsed = await createNeedSchema.parseAsync(raw);
     await createNeed(parsed);
     redirect("/mon-espace");
   }
